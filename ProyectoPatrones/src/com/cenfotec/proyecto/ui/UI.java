@@ -267,7 +267,7 @@ public class UI {
 	}//Enviar a Proceso
 	
 	/*Se crean las partes de una tarea y retorna una lista de tareas*///*************************************************
-	static ArrayList<Tarea> contruirTarea(int pCantTareas)throws java.io.IOException{
+	public static ArrayList<Tarea> contruirTarea(int pCantTareas)throws java.io.IOException{
 		String titTarea, grupo;
 		int resInd;
 		ArrayList<String> listaIndicaciones = new ArrayList<String>();
@@ -327,7 +327,7 @@ public class UI {
 		}
 		
 		return listaIndicaciones;
-	}//*****************************************************************
+	}//*********************************************************************************************************************
 	
 	/*Se registran los datos de un nuevo usuario*/
 	static void registrarUsuario()throws java.io.IOException{
@@ -384,7 +384,7 @@ public class UI {
 		}
 				
 		return error;
-	}
+	}//Enviar a Usuario
 	
 	/*Se validan los datos del usuario*/
 	static boolean validarDatosUsuario(String[] pDatos)throws java.io.IOException{
@@ -397,7 +397,7 @@ public class UI {
 		}
 		
 		return error;
-	}
+	}//Enviar a Usuario
 	
 	/*Se selecciona el proceso para ejecutar la tarea de acuerdo al grupo que pertenece el usuario*/
 	static void ejecutarProceso()throws java.io.IOException{
@@ -512,7 +512,7 @@ public class UI {
 		}
 		
 		return procesoSelec;
-	}
+	}//Enviar a Proceso
 	
 	/*Se ejecuta la tarea de acuerdo al grupo del usuario*/
 	static void completarTarea(Proceso pProceso)throws java.io.IOException{
@@ -538,5 +538,5 @@ public class UI {
 		gestor.actualizarListaProcesos(proAct);
 		
 		gestor.registrarHistorial(pProceso.getNomProceso(), tarea.getTitulo(), usuario.getNombre() + " " + usuario.getApellido());
-	}
+	}//Enviar a Tarea
 }
