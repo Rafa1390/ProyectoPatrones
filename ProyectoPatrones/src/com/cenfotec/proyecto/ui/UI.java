@@ -257,11 +257,8 @@ public class UI {
 	}//Enviar a Proceso
 	
 	/*Se crean las partes de una tarea y retorna una lista de tareas*///*************************************************
-	
-	
-	
-	
-	static ArrayList<Tarea> contruirTarea(int pCantTareas)throws java.io.IOException{
+
+	public static ArrayList<Tarea> contruirTarea(int pCantTareas)throws java.io.IOException{
 		String titTarea, grupo;
 		int resInd;
 		ArrayList<String> listaIndicaciones = new ArrayList<String>();
@@ -321,7 +318,7 @@ public class UI {
 		}
 		
 		return listaIndicaciones;
-	}//*****************************************************************
+	}//*********************************************************************************************************************
 	
 	
 	
@@ -368,7 +365,21 @@ public class UI {
 		
 		gestor.crearUsuario(nombre, apellido, grupo, correo, contrasenna);
 	}
-
+	
+	/*Se valida que el correo no pertenezca a otro usuario*/
+	static boolean validarCorreo(String pCorreo)throws java.io.IOException{
+		boolean error = false;
+		Gestor gestor = new Gestor();
+		
+		ArrayList<Usuario> listaUsuarios = gestor.getListaUsuarios();
+		for(int i = 0; i < listaUsuarios.size(); i++) {
+			if(pCorreo.equals(listaUsuarios.get(i).getCorreo())) {
+				error = true;
+			}
+		}
+				
+		return error;
+	}//Enviar a Usuario
 	
 	/*Se validan los datos del usuario*/
 	static boolean validarDatosUsuario(String[] pDatos)throws java.io.IOException{
@@ -381,7 +392,7 @@ public class UI {
 		}
 		
 		return error;
-	}
+	}//Enviar a Usuario
 	
 	/*Se selecciona el proceso para ejecutar la tarea de acuerdo al grupo que pertenece el usuario*/
 	static void ejecutarProceso()throws java.io.IOException{
@@ -496,7 +507,7 @@ public class UI {
 		}
 		
 		return procesoSelec;
-	}
+	}//Enviar a Proceso
 	
 	/*Se ejecuta la tarea de acuerdo al grupo del usuario*/
 	static void completarTarea(Proceso pProceso)throws java.io.IOException{
@@ -522,5 +533,5 @@ public class UI {
 		gestor.actualizarListaProcesos(proAct);
 		
 		gestor.registrarHistorial(pProceso.getNomProceso(), tarea.getTitulo(), usuario.getNombre() + " " + usuario.getApellido());
-	}
+	}//Enviar a Tarea
 }
