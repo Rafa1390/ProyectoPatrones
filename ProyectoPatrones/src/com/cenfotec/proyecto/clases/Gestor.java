@@ -1,5 +1,6 @@
 package com.cenfotec.proyecto.clases;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -173,5 +174,19 @@ public class Gestor {
 	
 	public ArrayList<Historial> getListaHistorial() throws java.io.IOException{
 		return listaHistorial;
+	}
+	
+	/*Se valida que el correo no este repetido*/
+	public boolean validarCorreo(String pCorreo) throws IOException{
+		boolean error = false;
+
+		ArrayList<Usuario> listaUsuarios = getListaUsuarios();
+		for(int i = 0; i < listaUsuarios.size(); i++) {
+			if(pCorreo.equals(listaUsuarios.get(i).getCorreo())) {
+				error = true;
+			}
+		}
+				
+		return error;
 	}
 }

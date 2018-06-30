@@ -183,30 +183,24 @@ public class UI {
 		boolean noSalir = true;
 		
 		switch(popcion){
-		
-
 		case 1:
 			crearProceso();
 			break;
 
 		case 2:
-
 			registrarUsuario();
 			break;
 			
 		case 3:
-
 			verHistorial();
 			break;
 
 		case 4:
-
 			noSalir = false;
 			correoUsuario = "";
 			break;
 
 		default:
-
 			out.println("Opcion invalida");
 			out.println();
 			break;
@@ -222,24 +216,20 @@ public class UI {
 		
 		switch(popcion){
 		
-
 		case 1:
 			ejecutarProceso();
 			break;
 
 		case 2:
-
 			num = verProcesos();
 			break;
 
 		case 3:
-
 			noSalir = false;
 			correoUsuario = "";
 			break;
 
 		default:
-
 			out.println("Opcion invalida");
 			out.println();
 			break;
@@ -267,6 +257,10 @@ public class UI {
 	}//Enviar a Proceso
 	
 	/*Se crean las partes de una tarea y retorna una lista de tareas*///*************************************************
+	
+	
+	
+	
 	static ArrayList<Tarea> contruirTarea(int pCantTareas)throws java.io.IOException{
 		String titTarea, grupo;
 		int resInd;
@@ -329,6 +323,10 @@ public class UI {
 		return listaIndicaciones;
 	}//*****************************************************************
 	
+	
+	
+	
+	
 	/*Se registran los datos de un nuevo usuario*/
 	static void registrarUsuario()throws java.io.IOException{
 		String nombre, apellido, grupo, correo, contrasenna;
@@ -350,7 +348,7 @@ public class UI {
 				out.println("Digite el correo electrónico del usuario");
 				correo = in.readLine();
 				
-				errorC = validarCorreo(correo);
+				errorC = gestor.validarCorreo(correo);
 				
 				if(errorC) {
 					out.println("El correo que desea registrar ya pertenece a un usuario registrado; Por favor digite un correo diferente");
@@ -370,21 +368,7 @@ public class UI {
 		
 		gestor.crearUsuario(nombre, apellido, grupo, correo, contrasenna);
 	}
-	
-	/*Se valida que el correo no pertenezca a otro usuario*/
-	static boolean validarCorreo(String pCorreo)throws java.io.IOException{
-		boolean error = false;
-		Gestor gestor = new Gestor();
-		
-		ArrayList<Usuario> listaUsuarios = gestor.getListaUsuarios();
-		for(int i = 0; i < listaUsuarios.size(); i++) {
-			if(pCorreo.equals(listaUsuarios.get(i).getCorreo())) {
-				error = true;
-			}
-		}
-				
-		return error;
-	}
+
 	
 	/*Se validan los datos del usuario*/
 	static boolean validarDatosUsuario(String[] pDatos)throws java.io.IOException{
