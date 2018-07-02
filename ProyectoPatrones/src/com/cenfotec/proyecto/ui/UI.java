@@ -23,6 +23,7 @@ public class UI {
 	static PrintStream out = System.out;
 	static String correoUsuario = "";
 	static int contador = 0;
+	static Gestor gestor = new Gestor();
 	
 	/*Se ingresan los datos para iniciar sesión*/
 	public static void main(String[] args)throws java.io.IOException {
@@ -192,7 +193,7 @@ public class UI {
 			break;
 			
 		case 3:
-			verHistorial();
+			verHistorial(); //out.println(gestor.verHistorial()); CAMBIAR A ESTO
 			break;
 
 		case 4:
@@ -366,21 +367,6 @@ public class UI {
 		gestor.crearUsuario(nombre, apellido, grupo, correo, contrasenna);
 	}
 	
-	/*Se valida que el correo no pertenezca a otro usuario*/
-	static boolean validarCorreo(String pCorreo)throws java.io.IOException{
-		boolean error = false;
-		Gestor gestor = new Gestor();
-		
-		ArrayList<Usuario> listaUsuarios = gestor.getListaUsuarios();
-		for(int i = 0; i < listaUsuarios.size(); i++) {
-			if(pCorreo.equals(listaUsuarios.get(i).getCorreo())) {
-				error = true;
-			}
-		}
-				
-		return error;
-	}//Enviar a Usuario
-	
 	/*Se validan los datos del usuario*/
 	static boolean validarDatosUsuario(String[] pDatos)throws java.io.IOException{
 		boolean error = false;
@@ -409,7 +395,7 @@ public class UI {
 		}
 	}
 	
-	static void verHistorial()throws java.io.IOException{
+	static void verHistorial()throws java.io.IOException{ // BORRAR
 		Gestor gestor = new Gestor();
 		ArrayList<Historial> listaHistorial = gestor.getListaHistorial();
 		Historial historial;
