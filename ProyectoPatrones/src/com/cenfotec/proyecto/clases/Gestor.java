@@ -194,7 +194,7 @@ public class Gestor {
 	}
 
 	/* Valida los datos ingresados para el inicio de sesión */
-	boolean iniciarSesion(String pCorreo, String pContrasenna) throws java.io.IOException {
+	public boolean iniciarSesion(String pCorreo, String pContrasenna) throws java.io.IOException {
 		String correoUsuario = "";
 		boolean iniciar = false;
 		String correo, contrasenna;
@@ -213,4 +213,23 @@ public class Gestor {
 
 		return iniciar;
 	}// Poner en clase InicioSesion?
+	
+	public Usuario obtenerUsuario(String pCorreo) throws java.io.IOException {
+
+		String correo;
+		Usuario usuario = new Usuario();
+
+		ArrayList<Usuario> listaUsuarios = getListaUsuarios();
+
+		for (int i = 0; i < listaUsuarios.size(); i++) {
+
+			correo = listaUsuarios.get(i).getCorreo();
+
+			if (correo.equals(pCorreo)) {
+				 usuario = listaUsuarios.get(i);
+			}
+		}
+
+		return usuario;
+	}// Usuario*
 }
