@@ -9,6 +9,7 @@ import java.util.Arrays;
 import org.junit.Test;
 
 import com.cenfotec.proyecto.clases.Gestor;
+import com.cenfotec.proyecto.clases.Historial;
 import com.cenfotec.proyecto.clases.Tarea;
 
 public class GestorTest {
@@ -43,6 +44,12 @@ public class GestorTest {
 		gestor.quemarDatos();
 		assertEquals(false, gestor.validarCorreo("silvia@gmail.com"));
 		assertEquals(true, gestor.validarCorreo("susana@gmail.com"));
+	}
+	
+	@Test
+	public void verHistorialTest() throws IOException {
+		Historial h = new Historial();
+		assertEquals("No se han ejecutado procesos", h.verHistorial());
 	}
 
 }
