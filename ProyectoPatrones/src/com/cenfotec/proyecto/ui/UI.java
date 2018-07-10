@@ -22,8 +22,6 @@ public class UI {
 
 	static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 	static PrintStream out = System.out;
-	//static String correoUsuario = "";
-	static int contador = 0;
 	static Gestor gestor = new Gestor();
 	static Usuario usuario = new Usuario();
 	static Tarea tarea = new Tarea();
@@ -41,13 +39,13 @@ public class UI {
 	}
 
 	/* Se ingresan los datos para iniciar sesión */
-	public static void main(String[] args) throws java.io.IOException {
+	public static void main(String[] args) throws Exception {
 
 		menuInicial();
 
 	}
 
-	static void menuInicial() throws IOException {
+	static void menuInicial() throws Exception {
 
 		String correo, contrasenna;
 		boolean iniciar = false;
@@ -60,11 +58,11 @@ public class UI {
 			out.println("Digite su contraseña");
 			contrasenna = in.readLine();
 
-			iniciar = iniciarSesion(correo, contrasenna);
+			iniciar = gestor.iniciarSesion(correo, contrasenna);
 
 			if (iniciar) {
 				out.println("Bienvenido");
-				mostrarMenuGrupo();
+				mostrarMenuGrupo(correo);
 			} else {
 				out.println("Los datos ingresados son incorrectos");
 			}
@@ -72,60 +70,23 @@ public class UI {
 
 	}
 
-	/* Valida los datos ingresados para el inicio de sesión */
-	static boolean iniciarSesion(String pCorreo, String pContrasenna) throws java.io.IOException {
-		boolean iniciar = false;
-		String correo, contrasenna;
-
-		ArrayList<Usuario> listaUsuarios = gestor.getListaUsuarios();
-		for (int i = 0; i < listaUsuarios.size(); i++) {
-
-			correo = listaUsuarios.get(i).getCorreo();
-			contrasenna = listaUsuarios.get(i).getContrasenna();
-
-			if (pCorreo.equals(correo) && pContrasenna.equals(contrasenna)) {
-				correoUsuario = correo;
-				iniciar = true;
-			}
-		}
-
-		return iniciar;
-	}// Poner en clase InicioSesion?
-
 	/* Redirecciona al usuario dependiendo del grupo al que pertenezca */
-	static void mostrarMenuGrupo() throws java.io.IOException {
+	static void mostrarMenuGrupo(String pCorreo) throws Exception {
 		Usuario usuario;
 
-		usuario = obtenerUsuario();
+		usuario = gestor.obtenerUsuario(pCorreo);
 
 		if (usuario.getGrupo().equals("Administrador")) {// Validar grupo en InicioSesion
 			verMenuAdministrador();
 		} else {
-			verMenuGrupo();
+			verMenuGrupo(pCorreo);
 		}
 	}// InicioSesion?
 
 	/* Devuelve al usuario de acuerdo al correo con el que se inició sesión */
-	static Usuario obtenerUsuario() throws java.io.IOException {
-
-		String correo;
-
-		ArrayList<Usuario> listaUsuarios = gestor.getListaUsuarios();
-
-		for (int i = 0; i < listaUsuarios.size(); i++) {
-
-			correo = listaUsuarios.get(i).getCorreo();
-
-			if (correo.equals(correoUsuario)) {
-				usuario = listaUsuarios.get(i);
-			}
-		}
-
-		return usuario;
-	}// Usuario*
 
 	/* Muestra el menú del usuario administrador */
-	static void verMenuAdministrador() throws java.io.IOException {
+	static void verMenuAdministrador() throws Exception {
 		int opc;
 		boolean noSalir = true;
 		String[] listaMenu = { "<---- Menú manejo de procesos ---->", " ", "1.  Crear proceso", "2.  Registrar usuario",
@@ -142,7 +103,7 @@ public class UI {
 	}
 
 	/* Muestra el menú para los demás grupos --- (Se puede hacer diferente) */
-	static void verMenuGrupo() throws java.io.IOException {
+	static void verMenuGrupo(String pCorreo) throws java.io.IOException {
 
 		/*
 		 * int opc; boolean noSalir = true; String[] listaMenu = {
@@ -167,18 +128,18 @@ public class UI {
 			out.println(" Digite la opcion: ");
 			out.println();
 			out.println();
-			opc = recOpc();
+			opc = recOpc(pCorreo);
 			out.println();
 			out.println(" La opcion ingresada fue " + opc);
 			out.println();
 		} while (opc != 3);
 	}// Modificar metodo
 
-	public static int recOpc() throws IOException {
+	public static int recOpc(String pCorreo) throws IOException {
 
 		int opc;
 		opc = Integer.parseInt(in.readLine());
-		ejecutarMenuGrupo(opc);
+		ejecutarMenuGrupo(opc, pCorreo);
 		return opc;
 
 	}
@@ -207,7 +168,7 @@ public class UI {
 	}
 
 	/* Ejecuta los metodos de acuerdo a la opción ingresada por el administrador */
-	static boolean ejecutarMenuAdministrador(int popcion) throws java.io.IOException {
+	static boolean ejecutarMenuAdministrador(int popcion) throws Exception {
 		boolean noSalir = true;
 
 		switch (popcion) {
@@ -225,7 +186,7 @@ public class UI {
 
 		case 4:
 			noSalir = false;
-			correoUsuario = "";
+			// correoUsuario = "";
 			break;
 
 		default:
@@ -238,23 +199,23 @@ public class UI {
 	}// Enviar a clase MenuDeSistema
 
 	/* Ejecuta los metodos de acuerdo a la opción ingresada por el usuario */
-	static boolean ejecutarMenuGrupo(int popcion) throws java.io.IOException {
+	static boolean ejecutarMenuGrupo(int popcion, String pCorreo) throws java.io.IOException {
 		boolean noSalir = true;
 		int num = 0;
 
 		switch (popcion) {
 
 		case 1:
-			ejecutarProceso();
+			ejecutarProceso(pCorreo);
 			break;
 
 		case 2:
-			num = verProcesos();
+			num = verProcesos(pCorreo);
 			break;
 
 		case 3:
 			noSalir = false;
-			correoUsuario = "";
+			// correoUsuario = "";
 			break;
 
 		default:
@@ -267,17 +228,36 @@ public class UI {
 	}// Enviar a clase MenuDeSistema
 
 	/* Se crea un proceso */
-	static void crearProceso() throws java.io.IOException {
+	static void crearProceso() throws Exception {
 		String nomProceso;
-		int cantTareas;
+		int cantTareas = 0;
 		ArrayList<Tarea> listaTareas = new ArrayList<Tarea>();
 
 		out.println("Indique el nombre del proceso que desea realizar");
 		nomProceso = in.readLine();
 
-		out.println("Indique la cantidad de tareas que desea asignarle al proceso");
-		cantTareas = Integer.parseInt(in.readLine());
+		while (true) {
 
+			try {
+				out.println("Indique la cantidad de tareas que desea asignarle al proceso");
+				cantTareas = Integer.parseInt(in.readLine());
+
+				if (cantTareas <= 0) {
+
+					continue;
+
+				}else {
+					
+					break;
+					
+				}
+			} catch (NumberFormatException e) {
+
+				out.println("Ingresar numeros positivos");
+
+			}
+		}
+		
 		listaTareas = contruirTarea(cantTareas);
 
 		gestor.crearProceso(nomProceso, listaTareas);
@@ -406,17 +386,17 @@ public class UI {
 	 * Se selecciona el proceso para ejecutar la tarea de acuerdo al grupo que
 	 * pertenece el usuario
 	 */
-	static void ejecutarProceso() throws java.io.IOException {
+	static void ejecutarProceso(String pCorreo) throws java.io.IOException {
 		int cantProc = 0, opc;
 		Proceso proceso;
 
-		cantProc = verProcesos();
+		cantProc = verProcesos(pCorreo);
 
 		if (cantProc > 0) {
 			out.println("Seleccione el número del proceso que desea realizar");
 			opc = Integer.parseInt(in.readLine());
-			proceso = seleccionarProceso(opc);
-			completarTarea(proceso);
+			proceso = seleccionarProceso(opc, pCorreo);
+			completarTarea(proceso, pCorreo);
 		}
 	}
 
@@ -447,8 +427,8 @@ public class UI {
 	 * Se muestran los procesos y las tareas de acuerdo al grupo que pertenece el
 	 * usuario
 	 */
-	static int verProcesos() throws java.io.IOException {
-		Usuario usuario = obtenerUsuario();
+	static int verProcesos(String pCorreo) throws java.io.IOException {
+		Usuario usuario = gestor.obtenerUsuario(pCorreo);
 		ArrayList<Proceso> listaProcesos = gestor.getListaProcesos();
 		int indice, contador = 0;
 		ArrayList<Tarea> listaTareas = new ArrayList<Tarea>();
@@ -489,11 +469,11 @@ public class UI {
 	 * Se selecciona el proceso de acuerdo a la tarea del grupo seleccionado por el
 	 * usuario
 	 */
-	static Proceso seleccionarProceso(int opc) throws java.io.IOException {
+	static Proceso seleccionarProceso(int opc, String pCorreo) throws java.io.IOException {
 		ArrayList<Proceso> listaProcesos = gestor.getListaProcesos();
 		int indice, contador = 0;
 		ArrayList<Tarea> listaTareas = new ArrayList<Tarea>();
-		Usuario usuario = obtenerUsuario();
+		Usuario usuario = gestor.obtenerUsuario(pCorreo);
 		String grupoUsuario, grupoTarea;
 		Proceso procesoSelec = new Proceso();
 		;
@@ -521,7 +501,7 @@ public class UI {
 	}// Enviar a Proceso
 
 	/* Se ejecuta la tarea de acuerdo al grupo del usuario */
-	static void completarTarea(Proceso pProceso) throws java.io.IOException {
+	static void completarTarea(Proceso pProceso, String pCorreo) throws java.io.IOException {
 		int indice = pProceso.getIndiceTarea();
 		ArrayList<Tarea> listaTareas = pProceso.getTareas();
 		Tarea tarea = listaTareas.get(indice);
@@ -529,7 +509,7 @@ public class UI {
 		ArrayList<String> respuestas = new ArrayList<String>();
 		Tarea tarAct = new Tarea();
 		Proceso proAct = new Proceso();
-		Usuario usuario = obtenerUsuario();
+		Usuario usuario = gestor.obtenerUsuario(pCorreo);
 
 		for (int i = 0; i < indicaciones.size(); i++) {
 			out.println(indicaciones.get(i));
